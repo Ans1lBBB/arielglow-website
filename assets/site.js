@@ -34,7 +34,7 @@ function renderProducts() {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const productName = btn.getAttribute("data-name") || "拼豆作品";
-      alert(`已將「${productName}」加入預購清單。（展示功能，正式連結待上架）`);
+      alert(`已將「${productName}」加入預購清單，將引導至 7-11 交貨便頁面。（展示功能，正式連結待上架）`);
     });
   });
 
@@ -50,7 +50,7 @@ const observer = new IntersectionObserver(
       }
     });
   },
-  { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
+  { threshold: 0.12, rootMargin: "0px 0px -20px 0px" }
 );
 
 function observeFadeElements() {
@@ -64,30 +64,48 @@ function observeFadeElements() {
 
 renderProducts();
 observeFadeElements();
+setTimeout(observeFadeElements, 100);
 
 window.addEventListener("load", () => {
+  const heroTitle = document.querySelector(".hero-content");
+  if (heroTitle) heroTitle.classList.add("visible");
+
   document.querySelectorAll(".fade-up").forEach((el) => {
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 40) {
+    if (rect.top < window.innerHeight - 80) {
       el.classList.add("visible");
       observer.unobserve(el);
     }
   });
 });
 
-document.querySelectorAll('.site-nav a, .wordmark').forEach((anchor) => {
+document.querySelectorAll(".nav-links a, .logo").forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
     const targetId = this.getAttribute("href");
-    if (targetId?.startsWith("#")) {
+    if (targetId && targetId !== "#" && targetId.startsWith("#")) {
       e.preventDefault();
-      const target = document.querySelector(targetId);
-      if (target) {
-        const y = target.getBoundingClientRect().top + window.scrollY - 56;
-        window.scrollTo({ top: y, behavior: "smooth" });
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        const offset = 70;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - offset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       }
     } else if (targetId === "#") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   });
+});
+
+window.addEventListener("scroll", () => {
+  const nav = document.querySelector(".navbar");
+  if (!nav) return;
+  if (window.scrollY > 20) {
+    nav.style.background = "rgba(249, 249, 247, 0.85)";
+    nav.style.borderBottomColor = "rgba(142, 142, 147, 0.3)";
+  } else {
+    nav.style.background = "rgba(249, 249, 247, 0.72)";
+    nav.style.borderBottomColor = "rgba(142, 142, 147, 0.2)";
+  }
 });
