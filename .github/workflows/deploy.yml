@@ -63,33 +63,52 @@ jobs:
         env:
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          ZONE_ID=$(curl -sS -X GET "https://api.cloudflare.com/client/v4/zones?name=arielglow.com" \
-            -H "Authorization: Bearer ${CF_TOKEN}" \
-            -H "Content-Type: application/json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['result'][0]['id'] if d.get('result') else '')")
-          if [ -z "$ZONE_ID" ]; then
-            echo "Could not resolve zone ID for arielglow.com"
-            exit 0
-          fi
-          echo "Zone ID: ${ZONE_ID}"
-          TARGET="arielglow-website.pages.dev"
-          ensure_record() {
-            local name="$1"
-            local type="$2"
-            local content="$3"
-            existing=$(curl -sS -G "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-              --data-urlencode "type=${type}" \
-              --data-urlencode "name=${name}" \
-              -H "Authorization: Bearer ${CF_TOKEN}")
-            if echo "$existing" | python3 -c "import sys,json; d=json.load(sys.stdin); sys.exit(0 if d.get('result') else 1)"; then
-              echo "DNS already exists: ${name}"
-              return 0
-            fi
-            curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-              -H "Authorization: Bearer ${CF_TOKEN}" \
-              -H "Content-Type: application/json" \
-              --data "{\"type\":\"${type}\",\"name\":\"${name}\",\"content\":\"${content}\",\"proxied\":true,\"ttl\":1}"
-            echo "Created DNS: ${name} -> ${content}"
-          }
-          ensure_record "www.arielglow.com" "CNAME" "${TARGET}"
-          ensure_record "arielglow.com" "CNAME" "${TARGET}"
+          python3 <<'PY'
+          import json, os, urllib.request, urllib.error
+
+          token = os.environ["CF_TOKEN"]
+          target = "arielglow-website.pages.dev"
+          headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+          def api(method, url, data=None):
+              body = json.dumps(data).encode() if data is not None else None
+              req = urllib.request.Request(url, data=body, headers=headers, method=method)
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      return json.loads(resp.read().decode())
+              except urllib.error.HTTPError as e:
+                  return json.loads(e.read().decode())
+
+          zones = api("GET", "https://api.cloudflare.com/client/v4/zones?name=arielglow.com")
+          if not zones.get("result"):
+              print("Zone not found or token lacks Zone:Read")
+              raise SystemExit(0)
+          zone_id = zones["result"][0]["id"]
+          print(f"Zone ID: {zone_id}")
+
+          records = api("GET", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records?per_page=100")
+          existing = records.get("result", [])
+
+          def upsert_cname(name, content):
+              fqdn = name if name.endswith("arielglow.com") else f"{name}.arielglow.com"
+              if name == "@":
+                  fqdn = "arielglow.com"
+              for rec in existing:
+                  if rec["name"] == fqdn and rec["type"] == "CNAME" and rec["content"] == content:
+                      print(f"CNAME OK: {fqdn} -> {content}")
+                      return
+              for rec in existing:
+                  if rec["name"] == fqdn and rec["type"] in ("A", "AAAA", "CNAME"):
+                      print(f"Deleting {rec['type']} {fqdn} (was {rec['content']})")
+                      api("DELETE", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{rec['id']}")
+              payload = {"type": "CNAME", "name": name, "content": content, "proxied": True, "ttl": 1}
+              res = api("POST", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", payload)
+              if res.get("success"):
+                  print(f"Created CNAME {fqdn} -> {content}")
+              else:
+                  print(f"Failed CNAME {fqdn}: {res.get('errors')}")
+
+          upsert_cname("www", target)
+          upsert_cname("@", target)
+          PY
         continue-on-error: true
