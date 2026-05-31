@@ -87,7 +87,10 @@ jobs:
           print(f"Zone ID: {zone_id}")
 
           records = api("GET", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records?per_page=100")
-          existing = records.get("result", [])
+          if not records.get("success"):
+              print(f"DNS list failed (token may need Zone DNS Edit): {records.get('errors')}")
+              raise SystemExit(0)
+          existing = records.get("result") or []
 
           def upsert_cname(name, content):
               fqdn = name if name.endswith("arielglow.com") else f"{name}.arielglow.com"
