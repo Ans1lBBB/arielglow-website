@@ -1,0 +1,378 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #F9F9F7;
+  color: #1D1D1F;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  font-weight: 400;
+  line-height: 1.4;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  backdrop-filter: blur(16px);
+  background: rgba(249, 249, 247, 0.72);
+  z-index: 1000;
+  padding: 1.2rem 2rem;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(142, 142, 147, 0.2);
+}
+
+.nav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #1D1D1F;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.4rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #1D1D1F;
+  transition: color 0.2s;
+  letter-spacing: -0.2px;
+}
+
+.nav-links a:hover {
+  color: #6F4E37;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 6rem 0;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 6rem 0 4rem;
+}
+
+.hero-content {
+  text-align: left;
+  max-width: 900px;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #1D1D1F;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #8E8E93;
+  margin-top: 1rem;
+  letter-spacing: -0.2px;
+}
+
+.hero-bg-art {
+  position: absolute;
+  right: 5%;
+  bottom: 10%;
+  width: 380px;
+  max-width: 40vw;
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-bg-art img {
+  width: 100%;
+  border-radius: 32px;
+  filter: grayscale(0.1) brightness(0.98);
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05);
+}
+
+.athlete-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+  align-items: center;
+}
+
+.athlete-left {
+  flex: 1.2;
+}
+
+.athlete-right {
+  flex: 1.8;
+}
+
+.big-number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(5rem, 12vw, 9rem);
+  font-weight: 700;
+  color: #1D1D1F;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  border-left: 4px solid #6F4E37;
+  padding-left: 1.2rem;
+}
+
+.stat-caption {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #8E8E93;
+}
+
+.athlete-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #2c2c2e;
+  font-weight: 400;
+}
+
+.athlete-text p {
+  margin-bottom: 1.5rem;
+}
+
+.magazine-quote {
+  font-style: italic;
+  font-weight: 450;
+  border-left: 2px solid #8E8E93;
+  padding-left: 1.5rem;
+  color: #6F4E37;
+}
+
+.placeholder-note {
+  font-size: 0.95rem;
+  color: #8E8E93;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 5vw, 3.5rem);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  letter-spacing: -0.3px;
+}
+
+.section-sub {
+  color: #8E8E93;
+  margin-bottom: 3rem;
+  font-size: 1rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.product-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 1.2rem 1rem 1.5rem;
+  transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(142, 142, 147, 0.15);
+  text-align: center;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 36px -16px rgba(0, 0, 0, 0.12);
+  border-color: rgba(111, 78, 55, 0.25);
+}
+
+.product-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 20px;
+  background: #F2F2F0;
+  margin-bottom: 1rem;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 0.6rem 0 0.2rem;
+  color: #1D1D1F;
+}
+
+.product-price {
+  font-weight: 500;
+  color: #8E8E93;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.btn-order {
+  background: transparent;
+  border: 1px solid #6F4E37;
+  border-radius: 40px;
+  padding: 0.6rem 1.2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6F4E37;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(2px);
+}
+
+.btn-order:hover {
+  background: #6F4E37;
+  color: #FFFFFF;
+  border-color: #6F4E37;
+}
+
+.contact-box {
+  text-align: center;
+  padding: 3rem 0 2rem;
+}
+
+.contact-email {
+  font-size: 1.6rem;
+  font-weight: 450;
+  margin-bottom: 1rem;
+  letter-spacing: -0.2px;
+}
+
+.contact-email a {
+  color: #1D1D1F;
+  text-decoration: none;
+  border-bottom: 1px solid #8E8E93;
+  transition: border 0.2s;
+}
+
+.contact-email a:hover {
+  border-bottom-color: #6F4E37;
+}
+
+.ig-link {
+  margin-top: 1rem;
+}
+
+.ig-link a {
+  font-weight: 500;
+  text-decoration: none;
+  color: #8E8E93;
+  transition: color 0.2s;
+}
+
+.ig-link a:hover {
+  color: #6F4E37;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 0 3rem;
+  font-size: 0.8rem;
+  color: #8E8E93;
+  border-top: 1px solid rgba(142, 142, 147, 0.2);
+  margin-top: 1rem;
+}
+
+@media (max-width: 800px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .athlete-grid {
+    flex-direction: column;
+  }
+
+  .navbar {
+    padding: 1rem 1.2rem;
+  }
+
+  .nav-links {
+    gap: 1.4rem;
+  }
+
+  .hero-bg-art {
+    opacity: 0.4;
+    width: 240px;
+    bottom: 5%;
+    right: 2%;
+  }
+
+  .hero-content {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  section {
+    padding: 4rem 0;
+  }
+
+  .big-number {
+    font-size: 4rem;
+  }
+
+  .contact-email {
+    font-size: 1.2rem;
+  }
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a,
+button {
+  cursor: pointer;
+}
