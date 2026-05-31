@@ -67,8 +67,7 @@ observeFadeElements();
 setTimeout(observeFadeElements, 100);
 
 window.addEventListener("load", () => {
-  const heroTitle = document.querySelector(".hero-content");
-  if (heroTitle) heroTitle.classList.add("visible");
+  document.querySelector(".hero-copy")?.classList.add("visible");
 
   document.querySelectorAll(".fade-up").forEach((el) => {
     const rect = el.getBoundingClientRect();
