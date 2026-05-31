@@ -35,3 +35,26 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy . --project-name=arielglow-website --branch=main --commit-dirty=true
+
+      - name: Bind custom domains
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          for domain in www.arielglow.com arielglow.com; do
+            echo "Adding domain: ${domain}"
+            response=$(curl -sS -X POST \
+              "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT}/pages/projects/arielglow-website/domains" \
+              -H "Authorization: Bearer ${CF_TOKEN}" \
+              -H "Content-Type: application/json" \
+              --data "{\"name\":\"${domain}\"}")
+            echo "$response"
+            if echo "$response" | grep -q '"success":true'; then
+              echo "OK: ${domain}"
+            elif echo "$response" | grep -qi "already exists\|duplicate"; then
+              echo "Already bound: ${domain}"
+            else
+              echo "Warning: could not add ${domain} (may need manual DNS in Cloudflare Dashboard)"
+            fi
+          done
+        continue-on-error: true
