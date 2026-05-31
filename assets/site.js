@@ -34,7 +34,7 @@ function renderProducts() {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const productName = btn.getAttribute("data-name") || "拼豆作品";
-      alert(`已將「${productName}」加入預購清單，將引導至 7-11 交貨便頁面。（展示功能，正式連結待上架）`);
+      alert(`我已把「${productName}」加入預購清單。（展示功能，正式連結之後會放上來）`);
     });
   });
 

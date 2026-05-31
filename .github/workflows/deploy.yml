@@ -115,3 +115,61 @@ jobs:
           upsert_cname("@", target)
           PY
         continue-on-error: true
+
+      - name: Apex redirect arielglow.com to www
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 <<'PY'
+          import json, os, urllib.request, urllib.error
+
+          token = os.environ["CF_TOKEN"]
+          headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+          def api(method, url, data=None):
+              body = json.dumps(data).encode() if data is not None else None
+              req = urllib.request.Request(url, data=body, headers=headers, method=method)
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      return json.loads(resp.read().decode())
+              except urllib.error.HTTPError as e:
+                  return json.loads(e.read().decode())
+
+          zones = api("GET", "https://api.cloudflare.com/client/v4/zones?name=arielglow.com")
+          if not zones.get("result"):
+              print("Zone not found")
+              raise SystemExit(0)
+          zone_id = zones["result"][0]["id"]
+          phase = "http_request_dynamic_redirect"
+          entry = api("GET", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/rulesets/phases/{phase}/entrypoint")
+          rule = {
+              "expression": '(http.host eq "arielglow.com")',
+              "description": "Redirect apex to www",
+              "action": "redirect",
+              "action_parameters": {
+                  "from_value": {
+                      "status_code": 301,
+                      "target_url": {
+                          "expression": 'concat("https://www.arielglow.com", http.request.uri.path)'
+                      },
+                      "preserve_query_string": True
+                  }
+              }
+          }
+          if entry.get("result"):
+              rs = entry["result"]
+              rules = [r for r in rs.get("rules", []) if r.get("description") != "Redirect apex to www"]
+              rules.insert(0, rule)
+              res = api("PUT", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/rulesets/{rs['id']}", {
+                  "rules": rules
+              })
+          else:
+              res = api("PUT", f"https://api.cloudflare.com/client/v4/zones/{zone_id}/rulesets/phases/{phase}/entrypoint", {
+                  "rules": [rule]
+              })
+          if res.get("success"):
+              print("Apex redirect rule OK")
+          else:
+              print(f"Apex redirect failed (token may need Zone Rules Edit): {res.get('errors')}")
+          PY
+        continue-on-error: true
