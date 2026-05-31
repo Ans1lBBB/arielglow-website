@@ -100,11 +100,5 @@ document.querySelectorAll(".nav-links a, .logo").forEach((anchor) => {
 window.addEventListener("scroll", () => {
   const nav = document.querySelector(".navbar");
   if (!nav) return;
-  if (window.scrollY > 20) {
-    nav.style.background = "rgba(249, 249, 247, 0.85)";
-    nav.style.borderBottomColor = "rgba(142, 142, 147, 0.3)";
-  } else {
-    nav.style.background = "rgba(249, 249, 247, 0.72)";
-    nav.style.borderBottomColor = "rgba(142, 142, 147, 0.2)";
-  }
+  nav.classList.toggle("scrolled", window.scrollY > 20);
 });
