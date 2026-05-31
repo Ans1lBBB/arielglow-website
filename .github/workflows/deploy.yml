@@ -49,12 +49,47 @@ jobs:
               -H "Content-Type: application/json" \
               --data "{\"name\":\"${domain}\"}")
             echo "$response"
-            if echo "$response" | grep -q '"success":true'; then
+            if echo "$response" | grep -q '"success"[[:space:]]*:[[:space:]]*true'; then
               echo "OK: ${domain}"
             elif echo "$response" | grep -qi "already exists\|duplicate"; then
               echo "Already bound: ${domain}"
             else
-              echo "Warning: could not add ${domain} (may need manual DNS in Cloudflare Dashboard)"
+              echo "Warning: could not add ${domain}"
             fi
           done
+        continue-on-error: true
+
+      - name: Ensure DNS records for Pages
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          ZONE_ID=$(curl -sS -X GET "https://api.cloudflare.com/client/v4/zones?name=arielglow.com" \
+            -H "Authorization: Bearer ${CF_TOKEN}" \
+            -H "Content-Type: application/json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['result'][0]['id'] if d.get('result') else '')")
+          if [ -z "$ZONE_ID" ]; then
+            echo "Could not resolve zone ID for arielglow.com"
+            exit 0
+          fi
+          echo "Zone ID: ${ZONE_ID}"
+          TARGET="arielglow-website.pages.dev"
+          ensure_record() {
+            local name="$1"
+            local type="$2"
+            local content="$3"
+            existing=$(curl -sS -G "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+              --data-urlencode "type=${type}" \
+              --data-urlencode "name=${name}" \
+              -H "Authorization: Bearer ${CF_TOKEN}")
+            if echo "$existing" | python3 -c "import sys,json; d=json.load(sys.stdin); sys.exit(0 if d.get('result') else 1)"; then
+              echo "DNS already exists: ${name}"
+              return 0
+            fi
+            curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+              -H "Authorization: Bearer ${CF_TOKEN}" \
+              -H "Content-Type: application/json" \
+              --data "{\"type\":\"${type}\",\"name\":\"${name}\",\"content\":\"${content}\",\"proxied\":true,\"ttl\":1}"
+            echo "Created DNS: ${name} -> ${content}"
+          }
+          ensure_record "www.arielglow.com" "CNAME" "${TARGET}"
+          ensure_record "arielglow.com" "CNAME" "${TARGET}"
         continue-on-error: true
