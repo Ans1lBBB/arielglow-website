@@ -1,16 +1,16 @@
 const products = [
-  { name: "極速幻影·拼豆畫", price: "NT$ 880", img: "https://picsum.photos/id/104/400/400" },
-  { name: "玫瑰金時光", price: "NT$ 780", img: "https://picsum.photos/id/106/400/400" },
-  { name: "賽道之心", price: "NT$ 920", img: "https://picsum.photos/id/20/400/400" },
-  { name: "像素貓咪午後", price: "NT$ 650", img: "https://picsum.photos/id/141/400/400" },
-  { name: "星辰競走者", price: "NT$ 990", img: "https://picsum.photos/id/29/400/400" },
-  { name: "櫻花拼豆掛飾", price: "NT$ 560", img: "https://picsum.photos/id/96/400/400" },
-  { name: "幾何動態", price: "NT$ 720", img: "https://picsum.photos/id/119/400/400" },
-  { name: "小狐狸森林", price: "NT$ 680", img: "https://picsum.photos/id/108/400/400" },
-  { name: "破風兔", price: "NT$ 830", img: "https://picsum.photos/id/28/400/400" },
-  { name: "貝殼之夢", price: "NT$ 590", img: "https://picsum.photos/id/128/400/400" },
-  { name: "復古遊戲機", price: "NT$ 750", img: "https://picsum.photos/id/0/400/400" },
-  { name: "水晶拼豆胸針", price: "NT$ 480", img: "https://picsum.photos/id/36/400/400" },
+  { name: "賽道上的小閃光", price: "NT$ 880", img: "https://picsum.photos/id/104/400/400" },
+  { name: "粉粉的傍晚", price: "NT$ 780", img: "https://picsum.photos/id/106/400/400" },
+  { name: "我愛跑步那種", price: "NT$ 920", img: "https://picsum.photos/id/20/400/400" },
+  { name: "貓咪打瞌睡", price: "NT$ 650", img: "https://picsum.photos/id/141/400/400" },
+  { name: "星星與運動鞋", price: "NT$ 990", img: "https://picsum.photos/id/29/400/400" },
+  { name: "櫻花小掛飾", price: "NT$ 560", img: "https://picsum.photos/id/96/400/400" },
+  { name: "彩虹幾何", price: "NT$ 720", img: "https://picsum.photos/id/119/400/400" },
+  { name: "森林小狐狸", price: "NT$ 680", img: "https://picsum.photos/id/108/400/400" },
+  { name: "兔子在衝刺", price: "NT$ 830", img: "https://picsum.photos/id/28/400/400" },
+  { name: "雙魚座的貝殼", price: "NT$ 590", img: "https://picsum.photos/id/128/400/400" },
+  { name: "復古小遊戲機", price: "NT$ 750", img: "https://picsum.photos/id/0/400/400" },
+  { name: "亮亮小胸針", price: "NT$ 480", img: "https://picsum.photos/id/36/400/400" },
 ];
 
 const container = document.getElementById("pixelGrid");
@@ -25,7 +25,7 @@ function renderProducts() {
       <img class="product-img" src="${item.img}" alt="${item.name}（示意圖）" loading="lazy">
       <div class="product-name">${item.name}</div>
       <div class="product-price">${item.price}</div>
-      <button class="btn-order" data-name="${item.name}">🛒 7-11 預購收藏</button>
+      <button class="btn-order" data-name="${item.name}">🛒 想預購這個</button>
     `;
     container.appendChild(card);
   });
@@ -34,7 +34,7 @@ function renderProducts() {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const productName = btn.getAttribute("data-name") || "拼豆作品";
-      alert(`我已把「${productName}」加入預購清單。（展示功能，正式連結之後會放上來）`);
+      alert(`「${productName}」我先記下來囉～（網站還在蓋，真正的 7-11 連結之後會放）`);
     });
   });
 
