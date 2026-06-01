@@ -51,7 +51,7 @@ jobs:
             echo "$response"
             if echo "$response" | grep -q '"success"[[:space:]]*:[[:space:]]*true'; then
               echo "OK: ${domain}"
-            elif echo "$response" | grep -qi "already exists\|duplicate"; then
+            elif echo "$response" | grep -qiE "already exists|duplicate|already added|8000018"; then
               echo "Already bound: ${domain}"
             else
               echo "Warning: could not add ${domain}"

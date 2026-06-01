@@ -1,50 +1,51 @@
-# arielglow.com — 根網域設定說明
+# arielglow.com — DNS 與 www 設定
 
-## 目前狀態
+## 為什麼會出現「www 沒內容、只有根網域有內容」？
 
-你已**成功停用駐留頁面**，鎖定的 `default-page.registrar-servers.com` 記錄已消失。👍
+常見原因：
 
-現在 DNS 裡只有 `www` 指到網站，**不含 www 的 `arielglow.com` 還沒設定**，所以打 `arielglow.com` 仍可能打不開。
-
----
-
-## 方法 A 第 5 步（圖解說明）
-
-你截圖裡選的是 **A 記錄** — 這是錯的。Cloudflare Pages 要用 **CNAME**，不是 A。
-
-請照下面填：
-
-1. Cloudflare → **arielglow.com** → **DNS** → **新增記錄**
-2. 欄位這樣填：
-
-| 欄位 | 填什麼 |
-|------|--------|
-| **類型** | 選 **CNAME**（不要選 A） |
-| **名稱** | 填 **`@`**（代表 arielglow.com 根網域） |
-| **目標** | 填 **`arielglow-website.pages.dev`** |
-| **Proxy 狀態** | **已代理**（橘色雲朵 ☁️ 開啟） |
-| **TTL** | 自動 |
-
-3. 按 **儲存**
-
-### 為什麼不是 A 記錄？
-
-- **A 記錄** = 填一組 IP 位址（例如 104.21.x.x）
-- **CNAME 記錄** = 填一個網域名稱，指向你的 Pages 專案
-
-Cloudflare Pages 的網址是 `arielglow-website.pages.dev`，所以要用 CNAME 指過去。
-
-### 完成後
-
-- `arielglow.com` → 自動轉到 `www.arielglow.com`（網站內 `_redirects` 已設定）
-- **不要刪** iCloud 的 MX / TXT 記錄（email 會壞）
+1. **`www` 沒有 CNAME 到 Pages**（只有 A 記錄或根本沒記錄）→ 瀏覽器打到錯誤的來源，可能空白或舊的駐留頁。
+2. **GitHub Actions 無法改 DNS** — 日誌會出現 `Authentication error`（Token 缺少 **Zone → DNS → Edit**）。需手動改一次。
+3. **根網域沒有 301 到 www** — 兩邊各顯示一份，搜尋引擎也會分裂。網站已用 `functions/_middleware.js` 強制 `arielglow.com` → `www.arielglow.com`。
 
 ---
 
-## 若 CNAME @ 無法新增
+## 請在 Cloudflare 手動確認（約 2 分鐘）
 
-改用 **Redirect Rule**（不用改 DNS）：
+**Dashboard** → **arielglow.com** → **DNS** → **記錄**
 
-Cloudflare → **規則** → **Redirect Rules** → 新增：
+| 名稱 | 類型 | 目標 | Proxy |
+|------|------|------|-------|
+| `www` | **CNAME** | `arielglow-website.pages.dev` | 已代理（橘雲） |
+| `@` | **CNAME** | `arielglow-website.pages.dev` | 已代理（橘雲） |
 
-- 若 `arielglow.com/*` → 轉到 `https://www.arielglow.com/$1`（301）
+- 若 `www` 或 `@` 是 **A / AAAA** 記錄，請**刪除**後改成上表 CNAME。
+- **不要刪** iCloud 的 **MX**、**TXT**（`hi@arielglow.com` 會壞）。
+
+**Workers & Pages** → **arielglow-website** → **Custom domains** 應有：
+
+- `www.arielglow.com`（建議設為主要網域）
+- `arielglow.com`
+
+---
+
+## 驗收
+
+改完 DNS 後等 1–5 分鐘，再開：
+
+- https://www.arielglow.com/ — 應看到 Ariel 首頁
+- https://arielglow.com/ — 應 **自動跳轉** 到 www（網址列變成 `www.`）
+
+若仍空白：瀏覽器 **強制重新整理**（Mac：`Cmd+Shift+R`），或無痕視窗再試。
+
+---
+
+## 可選：讓 GitHub Actions 自動改 DNS
+
+到 Cloudflare → **My Profile** → **API Tokens** → 編輯部署用 Token，加上：
+
+- **Zone** → **DNS** → **Edit**
+- **Zone** → **Zone** → **Read**
+- （可選）**Zone** → **Single Redirect** → **Edit**（apex 轉址規則）
+
+存檔後下次 push `main` 會自動建立 CNAME。
