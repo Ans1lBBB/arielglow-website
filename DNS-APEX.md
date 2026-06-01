@@ -52,7 +52,19 @@
 
 也可手動跑：**Actions** → **Cloudflare hardening** → **Run workflow**
 
-### API Token 權限（若 Actions 失敗）
+### DMARC（安全性見解 — 手動加一筆即可）
+
+**DNS** → **新增記錄**：
+
+| 類型 | 名稱 | 內容 |
+|------|------|------|
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:hi@arielglow.com` |
+
+### 一律使用 HTTPS（建議開啟）
+
+**SSL/TLS** → **邊緣憑證** → 開啟 **一律使用 HTTPS**
+
+### API Token 權限（若 Actions 無法自動改 DNS/SSL）
 
 編輯 GitHub Secret 用的 Token，需包含：
 
