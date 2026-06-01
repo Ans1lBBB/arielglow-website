@@ -1,19 +1,18 @@
-const PRODUCT_SIZE = "8×10 cm";
 const PRODUCT_PRICE = "NT$ 270";
 
 const products = [
-  { name: "賽道上的小閃光", img: "https://picsum.photos/id/104/400/400" },
-  { name: "粉粉的傍晚", img: "https://picsum.photos/id/106/400/400" },
-  { name: "我愛跑步那種", img: "https://picsum.photos/id/20/400/400" },
-  { name: "貓咪打瞌睡", img: "https://picsum.photos/id/141/400/400" },
-  { name: "星星與運動鞋", img: "https://picsum.photos/id/29/400/400" },
-  { name: "櫻花小掛飾", img: "https://picsum.photos/id/96/400/400" },
-  { name: "彩虹幾何", img: "https://picsum.photos/id/119/400/400" },
-  { name: "森林小狐狸", img: "https://picsum.photos/id/108/400/400" },
-  { name: "兔子在衝刺", img: "https://picsum.photos/id/28/400/400" },
-  { name: "雙魚座的貝殼", img: "https://picsum.photos/id/128/400/400" },
-  { name: "復古小遊戲機", img: "https://picsum.photos/id/0/400/400" },
-  { name: "亮亮小胸針", img: "https://picsum.photos/id/36/400/400" },
+  { name: "龍貓小精靈", size: "13×9.5 cm", img: "/images/products/01-totoro.jpg" },
+  { name: "布丁狗", size: "10.5×11 cm", img: "/images/products/02-pompompurin.jpg" },
+  { name: "企鵝愛心氣球", size: "10.5×9 cm", img: "/images/products/03-penguin.jpg" },
+  { name: "小鋼琴", size: "2.5×5.5 cm", img: "/images/products/04-piano.jpg" },
+  { name: "貓貓蟲咖波", size: "8×10 cm", img: "/images/products/05-capoo.jpg" },
+  { name: "茶杯小貓", size: "8.5×10.5 cm", img: "/images/products/06-cat-cup.jpg" },
+  { name: "可達鴨", size: "10.5×9.5 cm", img: "/images/products/07-psyduck-a.jpg" },
+  { name: "Mang", size: "10.5×8 cm", img: "/images/products/08-mang.jpg" },
+  { name: "漢堡寶寶", size: "8×8.5 cm", img: "/images/products/09-burger.jpg" },
+  { name: "可達鴨吊飾", size: "10.5×9.5 cm", img: "/images/products/10-psyduck-b.jpg" },
+  { name: "紅橘小怪", size: "11.5×10 cm", img: "/images/products/11-stripe.jpg" },
+  { name: "草莓冰棒", size: "5.5×4 cm", img: "/images/products/12-popsicle.jpg" },
 ];
 
 const container = document.getElementById("pixelGrid");
@@ -25,9 +24,9 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "product-card fade-up";
     card.innerHTML = `
-      <img class="product-img" src="${item.img}" alt="${item.name}（示意圖）" loading="lazy">
+      <img class="product-img" src="${item.img}" alt="${item.name}" loading="lazy">
       <div class="product-name">${item.name}</div>
-      <div class="product-size">${PRODUCT_SIZE}</div>
+      <div class="product-size">${item.size}</div>
       <div class="product-price">${PRODUCT_PRICE}</div>
       <button class="btn-order" data-name="${item.name}">🛒 想預購這個</button>
     `;
