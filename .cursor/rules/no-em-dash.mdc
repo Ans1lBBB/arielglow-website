@@ -1,0 +1,14 @@
+---
+description: Never use em dash (——) in any user-facing or project text
+alwaysApply: true
+---
+
+# No em dash
+
+The project owner **strongly forbids** the em dash character `——` (and single em dash `—` used as punctuation).
+
+- Do **not** use `——` or `—` in website copy, commits, docs, comments, or replies to the user.
+- Use commas、句號、分號，或拆成兩句代替。
+- Before finishing edits, search the repo for `——` and `—` in changed files and remove them.
+
+This applies to past fixes retroactively when touching files, and to all future work in this repository.

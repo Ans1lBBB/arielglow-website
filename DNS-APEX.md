@@ -1,12 +1,12 @@
-# arielglow.com — DNS 與 www 設定
+# arielglow.com：DNS 與 www 設定
 
 ## 為什麼會出現「www 沒內容、只有根網域有內容」？
 
 常見原因：
 
 1. **`www` 沒有 CNAME 到 Pages**（只有 A 記錄或根本沒記錄）→ 瀏覽器打到錯誤的來源，可能空白或舊的駐留頁。
-2. **GitHub Actions 無法改 DNS** — 日誌會出現 `Authentication error`（Token 缺少 **Zone → DNS → Edit**）。需手動改一次。
-3. **根網域沒有 301 到 www** — 兩邊各顯示一份，搜尋引擎也會分裂。網站已用 `functions/_middleware.js` 強制 `arielglow.com` → `www.arielglow.com`。
+2. **GitHub Actions 無法改 DNS**：日誌會出現 `Authentication error`（Token 缺少 **Zone → DNS → Edit**）。需手動改一次。
+3. **根網域沒有 301 到 www**：兩邊各顯示一份，搜尋引擎也會分裂。網站已用 `functions/_middleware.js` 強制 `arielglow.com` → `www.arielglow.com`。
 
 ---
 
@@ -33,8 +33,8 @@
 
 改完 DNS 後等 1–5 分鐘，再開：
 
-- https://www.arielglow.com/ — 應看到 Ariel 首頁
-- https://arielglow.com/ — 應 **自動跳轉** 到 www（網址列變成 `www.`）
+- https://www.arielglow.com/：應看到 Ariel 首頁
+- https://arielglow.com/：應 **自動跳轉** 到 www（網址列變成 `www.`）
 
 若仍空白：瀏覽器 **強制重新整理**（Mac：`Cmd+Shift+R`），或無痕視窗再試。
 
@@ -52,7 +52,7 @@
 
 也可手動跑：**Actions** → **Cloudflare hardening** → **Run workflow**
 
-### DMARC（安全性見解 — 手動加一筆即可）
+### DMARC（安全性見解，手動加一筆即可）
 
 **DNS** → **新增記錄**：
 
