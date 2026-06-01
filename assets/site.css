@@ -45,6 +45,15 @@ body {
   text-decoration: none;
 }
 
+.logo-zh {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: #8E8E93;
+  margin-left: 0.35rem;
+}
+
 .nav-links {
   display: flex;
   gap: 2.4rem;
