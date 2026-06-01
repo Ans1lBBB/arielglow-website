@@ -1,18 +1,18 @@
 const PRODUCT_PRICE = "NT$ 270";
 
 const products = [
-  { name: "龍貓小精靈", size: "13×9.5 cm", img: "/images/products/01-totoro.jpg" },
-  { name: "布丁狗", size: "10.5×11 cm", img: "/images/products/02-pompompurin.jpg" },
-  { name: "企鵝愛心氣球", size: "10.5×9 cm", img: "/images/products/03-penguin.jpg" },
-  { name: "小鋼琴", size: "2.5×5.5 cm", img: "/images/products/04-piano.jpg" },
-  { name: "貓貓蟲咖波", size: "8×10 cm", img: "/images/products/05-capoo.jpg" },
-  { name: "茶杯小貓", size: "8.5×10.5 cm", img: "/images/products/06-cat-cup.jpg" },
-  { name: "可達鴨", size: "10.5×9.5 cm", img: "/images/products/07-psyduck-a.jpg" },
-  { name: "Mang", size: "10.5×8 cm", img: "/images/products/08-mang.jpg" },
-  { name: "漢堡寶寶", size: "8×8.5 cm", img: "/images/products/09-burger.jpg" },
-  { name: "可達鴨吊飾", size: "10.5×9.5 cm", img: "/images/products/10-psyduck-b.jpg" },
-  { name: "紅橘小怪", size: "11.5×10 cm", img: "/images/products/11-stripe.jpg" },
+  { name: "可達鴨（無孔）", size: "10.5×9.5 cm", img: "/images/products/07-psyduck-a.jpg" },
   { name: "草莓冰棒", size: "5.5×4 cm", img: "/images/products/12-popsicle.jpg" },
+  { name: "卡波", size: "10.5×8 cm", img: "/images/products/08-mang.jpg" },
+  { name: "外星豬", size: "8×10 cm", img: "/images/products/05-capoo.jpg" },
+  { name: "漢堡堡", size: "8×8.5 cm", img: "/images/products/09-burger.jpg" },
+  { name: "貓貓咖啡杯", size: "8.5×10.5 cm", img: "/images/products/06-cat-cup.jpg" },
+  { name: "可達鴨（有孔）", size: "10.5×9.5 cm", img: "/images/products/10-psyduck-b.jpg" },
+  { name: "火星人", size: "11.5×10 cm", img: "/images/products/11-stripe.jpg" },
+  { name: "布丁狗", size: "10.5×11 cm", img: "/images/products/02-pompompurin.jpg" },
+  { name: "鋼琴", size: "2.5×5.5 cm", img: "/images/products/04-piano.jpg" },
+  { name: "被氣球帶走的企鵝", size: "10.5×9 cm", img: "/images/products/03-penguin.jpg" },
+  { name: "豆豆種子", size: "13×9.5 cm", img: "/images/products/01-totoro.jpg" },
 ];
 
 const container = document.getElementById("pixelGrid");
