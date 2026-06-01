@@ -291,48 +291,22 @@ section {
 .product-name {
   font-weight: 600;
   font-size: 1.2rem;
-  margin: 0.6rem 0 0.5rem;
+  margin: 0.6rem 0 0.15rem;
   color: #1D1D1F;
 }
 
-.product-specs {
-  margin: 0 0 1rem;
-  padding: 0.65rem 0.75rem;
-  background: rgba(249, 249, 247, 0.9);
-  border-radius: 12px;
-  border: 1px solid rgba(142, 142, 147, 0.12);
-  text-align: left;
+.product-size {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #8E8E93;
+  margin-bottom: 0.25rem;
 }
 
-.product-spec-row {
-  display: grid;
-  grid-template-columns: 2.5rem 1fr;
-  gap: 0.35rem 0.5rem;
-  align-items: baseline;
-  font-size: 0.82rem;
-  line-height: 1.45;
-}
-
-.product-spec-row + .product-spec-row {
-  margin-top: 0.35rem;
-}
-
-.product-spec-row dt {
-  margin: 0;
+.product-price {
   font-weight: 500;
   color: #8E8E93;
-  letter-spacing: 0.04em;
-}
-
-.product-spec-row dd {
-  margin: 0;
-  color: #3A3A3C;
-  font-weight: 400;
-}
-
-.product-spec-price dd {
-  font-weight: 600;
-  color: #6F4E37;
+  margin-bottom: 1rem;
+  font-size: 1rem;
 }
 
 .btn-order {
