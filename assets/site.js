@@ -1,16 +1,18 @@
+const PERLER_MATERIAL = "拼豆";
+
 const products = [
-  { name: "賽道上的小閃光", price: "NT$ 880", img: "https://picsum.photos/id/104/400/400" },
-  { name: "粉粉的傍晚", price: "NT$ 780", img: "https://picsum.photos/id/106/400/400" },
-  { name: "我愛跑步那種", price: "NT$ 920", img: "https://picsum.photos/id/20/400/400" },
-  { name: "貓咪打瞌睡", price: "NT$ 650", img: "https://picsum.photos/id/141/400/400" },
-  { name: "星星與運動鞋", price: "NT$ 990", img: "https://picsum.photos/id/29/400/400" },
-  { name: "櫻花小掛飾", price: "NT$ 560", img: "https://picsum.photos/id/96/400/400" },
-  { name: "彩虹幾何", price: "NT$ 720", img: "https://picsum.photos/id/119/400/400" },
-  { name: "森林小狐狸", price: "NT$ 680", img: "https://picsum.photos/id/108/400/400" },
-  { name: "兔子在衝刺", price: "NT$ 830", img: "https://picsum.photos/id/28/400/400" },
-  { name: "雙魚座的貝殼", price: "NT$ 590", img: "https://picsum.photos/id/128/400/400" },
-  { name: "復古小遊戲機", price: "NT$ 750", img: "https://picsum.photos/id/0/400/400" },
-  { name: "亮亮小胸針", price: "NT$ 480", img: "https://picsum.photos/id/36/400/400" },
+  { name: "賽道上的小閃光", size: "40 × 50 cm", price: "NT$ 880", img: "https://picsum.photos/id/104/400/400" },
+  { name: "粉粉的傍晚", size: "35 × 45 cm", price: "NT$ 780", img: "https://picsum.photos/id/106/400/400" },
+  { name: "我愛跑步那種", size: "45 × 55 cm", price: "NT$ 920", img: "https://picsum.photos/id/20/400/400" },
+  { name: "貓咪打瞌睡", size: "30 × 30 cm", price: "NT$ 650", img: "https://picsum.photos/id/141/400/400" },
+  { name: "星星與運動鞋", size: "42 × 52 cm", price: "NT$ 990", img: "https://picsum.photos/id/29/400/400" },
+  { name: "櫻花小掛飾", size: "18 × 22 cm", price: "NT$ 560", img: "https://picsum.photos/id/96/400/400" },
+  { name: "彩虹幾何", size: "38 × 38 cm", price: "NT$ 720", img: "https://picsum.photos/id/119/400/400" },
+  { name: "森林小狐狸", size: "32 × 40 cm", price: "NT$ 680", img: "https://picsum.photos/id/108/400/400" },
+  { name: "兔子在衝刺", size: "36 × 44 cm", price: "NT$ 830", img: "https://picsum.photos/id/28/400/400" },
+  { name: "雙魚座的貝殼", size: "28 × 34 cm", price: "NT$ 590", img: "https://picsum.photos/id/128/400/400" },
+  { name: "復古小遊戲機", size: "34 × 42 cm", price: "NT$ 750", img: "https://picsum.photos/id/0/400/400" },
+  { name: "亮亮小胸針", size: "12 × 14 cm", price: "NT$ 480", img: "https://picsum.photos/id/36/400/400" },
 ];
 
 const container = document.getElementById("pixelGrid");
@@ -24,7 +26,20 @@ function renderProducts() {
     card.innerHTML = `
       <img class="product-img" src="${item.img}" alt="${item.name}（示意圖）" loading="lazy">
       <div class="product-name">${item.name}</div>
-      <div class="product-price">${item.price}</div>
+      <dl class="product-specs">
+        <div class="product-spec-row">
+          <dt>尺寸</dt>
+          <dd>${item.size}</dd>
+        </div>
+        <div class="product-spec-row">
+          <dt>材質</dt>
+          <dd>${item.material || PERLER_MATERIAL}</dd>
+        </div>
+        <div class="product-spec-row product-spec-price">
+          <dt>價格</dt>
+          <dd>${item.price}</dd>
+        </div>
+      </dl>
       <button class="btn-order" data-name="${item.name}">🛒 想預購這個</button>
     `;
     container.appendChild(card);
