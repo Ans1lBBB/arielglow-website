@@ -40,12 +40,24 @@
 
 ---
 
-## 可選：讓 GitHub Actions 自動改 DNS
+## 自動維護（已設定）
 
-到 Cloudflare → **My Profile** → **API Tokens** → 編輯部署用 Token，加上：
+每次 push `main` 部署後，會執行 `scripts/ensure-cloudflare.py`：
 
-- **Zone** → **DNS** → **Edit**
-- **Zone** → **Zone** → **Read**
-- （可選）**Zone** → **Single Redirect** → **Edit**（apex 轉址規則）
+- 確認 `@` / `www` CNAME → `arielglow-website.pages.dev`
+- 綁定 Pages 自訂網域
+- 開啟「一律使用 HTTPS」
+- 新增 DMARC（`_dmarc` TXT）
+- Zone 層 apex → www 301（與 `functions/_middleware.js` 雙重保險）
 
-存檔後下次 push `main` 會自動建立 CNAME。
+也可手動跑：**Actions** → **Cloudflare hardening** → **Run workflow**
+
+### API Token 權限（若 Actions 失敗）
+
+編輯 GitHub Secret 用的 Token，需包含：
+
+- Zone → DNS → Edit
+- Zone → SSL and Certificates → Edit
+- Zone → Zone → Read
+- Zone → Page Rules / Redirect Rules → Edit（或 Account Rulesets）
+- Account → Cloudflare Pages → Edit
