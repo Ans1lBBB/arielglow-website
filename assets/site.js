@@ -90,8 +90,8 @@ function renderProducts() {
       <div class="product-name">${item.name}</div>
       <div class="product-size">${item.size}</div>
       <div class="product-price">${PRODUCT_PRICE}</div>
-      <p class="product-order-hint">記得選：${item.myshipSpec}</p>
-      <a class="btn-order" href="${MYSHIP_STORE}" target="_blank" rel="noopener noreferrer">🛒 到 7-11 買這個</a>
+      <p class="product-order-hint">在賣場選這個規格就好：${item.myshipSpec}</p>
+      <a class="btn-order" href="${MYSHIP_STORE}" target="_blank" rel="noopener noreferrer">🛒 到 7-11 帶它回家</a>
     `;
     container.appendChild(card);
   });

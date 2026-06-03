@@ -268,10 +268,11 @@ section {
 }
 
 .works-shopping-note-title {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem;
-  color: #1D1D1F;
-  margin-bottom: 0.65rem;
+  color: #6F4E37;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
 }
 
 .works-shopping-note p {
