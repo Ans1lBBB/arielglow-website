@@ -53,11 +53,18 @@ async function getZoneId(accountId) {
   return null;
 }
 
-async function verifyAccountToken(accountId) {
-  const data = await cfFetch(
-    `https://api.cloudflare.com/client/v4/accounts/${accountId}/tokens/verify`
-  );
-  return data.result;
+async function verifyApiToken(accountId) {
+  try {
+    const user = await cfFetch(
+      "https://api.cloudflare.com/client/v4/user/tokens/verify"
+    );
+    return { scope: "user", ...user.result };
+  } catch {
+    const account = await cfFetch(
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/tokens/verify`
+    );
+    return { scope: "account", ...account.result };
+  }
 }
 
 async function resolveToken() {
@@ -71,8 +78,10 @@ async function resolveToken() {
   }
 
   try {
-    const verified = await verifyAccountToken(accountId);
-    console.log(`API token verified for account: ${verified?.id || accountId}`);
+    const verified = await verifyApiToken(accountId);
+    console.log(
+      `API token verified (${verified.scope}): ${verified?.id || accountId}`
+    );
   } catch (err) {
     throw new Error(
       `Token/Account ID mismatch (${err.message}). ` +
@@ -87,6 +96,12 @@ async function resolveToken() {
     );
     token = pickTokenFromSites(list.result || []);
   } catch (err) {
+    if (/authentication error/i.test(err.message)) {
+      throw new Error(
+        "Web Analytics API: Authentication error. Add Account Settings Read+Edit to the API token, " +
+          "or set CF_WEB_ANALYTICS_TOKEN from Cloudflare → Web Analytics."
+      );
+    }
     console.warn("RUM list skipped:", err.message);
   }
 
