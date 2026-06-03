@@ -101,6 +101,35 @@ async function resolveToken() {
   const sites = list.result || [];
   let token = pickTokenFromSites(sites);
 
+  if (!token && sites.length > 0) {
+    const site = sites[0];
+    const rulesetId = site.ruleset?.id;
+    if (rulesetId) {
+      const newRules = HOSTS.map((host) => ({
+        host,
+        inclusive: true,
+        is_paused: false,
+        paths: ["*"],
+      }));
+      try {
+        await cfFetch(
+          `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/v2/${rulesetId}/rules`,
+          { method: "POST", body: JSON.stringify({ rules: newRules }) }
+        );
+        console.log("Added arielglow hosts to existing Web Analytics ruleset.");
+        token = site.site_token || null;
+      } catch (err) {
+        console.warn("Could not add arielglow rules:", err.message);
+        if (site.site_token) {
+          token = site.site_token;
+          console.warn(
+            "Using account Web Analytics token anyway (may need CF_WEB_ANALYTICS_TOKEN for accurate ariel stats)."
+          );
+        }
+      }
+    }
+  }
+
   if (!token) {
     const zoneId = await getZoneId();
     const attempts = [
