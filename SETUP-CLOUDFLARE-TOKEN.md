@@ -19,3 +19,13 @@
 4. **Actions** → **Cloudflare hardening** → **Run workflow**
 
 更新後，每次 push 會自動維護：CNAME、DMARC、一律 HTTPS、apex→www 轉址。
+
+---
+
+## 訪客統計（Cloudflare Web Analytics）
+
+每次部署會自動為 **arielglow.com** 插入 Web Analytics（免費，與 anselbi.com 相同機制）。
+
+**查看數據：** Cloudflare Dashboard → 網域 **arielglow.com** → **Analytics & Logs** → **Web Analytics**
+
+啟用後約 24～48 小時會有穩定圖表。
