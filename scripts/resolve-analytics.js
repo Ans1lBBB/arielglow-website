@@ -43,7 +43,7 @@ function pickTokenFromSites(sites) {
   return glow[0]?.site_token || null;
 }
 
-async function getZoneId(accountId) {
+async function getZoneId() {
   for (const name of ["arielglow.com", "www.arielglow.com"]) {
     const data = await cfFetch(
       `https://api.cloudflare.com/client/v4/zones?name=${encodeURIComponent(name)}`
@@ -77,45 +77,53 @@ async function resolveToken() {
     return null;
   }
 
-  try {
-    const verified = await verifyApiToken(accountId);
-    console.log(
-      `API token verified (${verified.scope}): ${verified?.id || accountId}`
-    );
-  } catch (err) {
-    throw new Error(
-      `Token/Account ID mismatch (${err.message}). ` +
-        "Fix GitHub Secrets or add CF_WEB_ANALYTICS_TOKEN from Cloudflare → Web Analytics."
-    );
-  }
+  const verified = await verifyApiToken(accountId);
+  console.log(
+    `API token verified (${verified.scope}): ${verified?.id || accountId}`
+  );
 
-  let token = null;
+  let list;
   try {
-    const list = await cfFetch(
+    list = await cfFetch(
       `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/site_info/list`
     );
-    token = pickTokenFromSites(list.result || []);
   } catch (err) {
     if (/authentication error/i.test(err.message)) {
       throw new Error(
-        "Web Analytics API: Authentication error. Add Account Settings Read+Edit to the API token, " +
+        "Web Analytics API returned Authentication error. " +
+          "Add Account Settings Read+Edit to the API token, " +
           "or set CF_WEB_ANALYTICS_TOKEN from Cloudflare → Web Analytics."
       );
     }
-    console.warn("RUM list skipped:", err.message);
+    throw err;
   }
 
-  if (!token) {
-    const zoneId = await getZoneId(accountId);
-    const body = zoneId
-      ? { zone_tag: zoneId, auto_install: false }
-      : { host: "www.arielglow.com", auto_install: false };
+  const sites = list.result || [];
+  let token = pickTokenFromSites(sites);
 
-    const created = await cfFetch(
-      `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/site_info`,
-      { method: "POST", body: JSON.stringify(body) }
-    );
-    token = created.result?.site_token || null;
+  if (!token) {
+    const zoneId = await getZoneId();
+    const attempts = [
+      zoneId ? { zone_tag: zoneId, auto_install: false } : null,
+      { host: "www.arielglow.com", auto_install: false },
+      { host: "arielglow.com", auto_install: false },
+    ].filter(Boolean);
+
+    for (const body of attempts) {
+      try {
+        const created = await cfFetch(
+          `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/site_info`,
+          { method: "POST", body: JSON.stringify(body) }
+        );
+        token = created.result?.site_token || null;
+        if (token) {
+          console.log(`Created Web Analytics site (${JSON.stringify(body)})`);
+          break;
+        }
+      } catch (err) {
+        console.warn(`RUM create failed for ${JSON.stringify(body)}:`, err.message);
+      }
+    }
   }
 
   return token;

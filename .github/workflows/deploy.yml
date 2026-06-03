@@ -31,10 +31,3 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy . --project-name=arielglow-website --branch=main --commit-dirty=true
-
-      - name: Harden Cloudflare (DNS, SSL, DMARC, redirects)
-        env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: python3 scripts/ensure-cloudflare.py
-        continue-on-error: true

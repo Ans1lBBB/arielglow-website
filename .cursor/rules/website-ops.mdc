@@ -1,0 +1,16 @@
+---
+description: Arielglow website — deploy and ops
+alwaysApply: true
+---
+
+# arielglow.com — Agent handles deploy
+
+Repo: `Ans1lBBB/arielglow-website` · Path: `/Users/ansel/Projects/daughter-Ariel-website`
+
+User does not manage Cloudflare/GitHub. On **部署** / copy changes: edit `index.html`, commit, push `main`, verify Actions + https://www.arielglow.com/
+
+Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (same account token as anselbi). Optional: `CF_WEB_ANALYTICS_TOKEN`.
+
+Optional DNS workflow: `Cloudflare hardening` (workflow_dispatch only).
+
+See also `../my-website/WEBSITE-OPS.md`.
