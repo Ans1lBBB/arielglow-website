@@ -29,3 +29,9 @@
 **查看數據：** Cloudflare Dashboard → 網域 **arielglow.com** → **Analytics & Logs** → **Web Analytics**
 
 啟用後約 24～48 小時會有穩定圖表。
+
+若 GitHub Actions 出現 `Authentication error`、網站沒有追蹤碼：
+
+1. 到 [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens) 確認 Token 含 **Account Analytics**（或與 `anselbi-website` 同一支完整權限 Token）
+2. 更新本 repo **Settings → Secrets → Actions** 的 `CLOUDFLARE_API_TOKEN`
+3. 或於 Cloudflare 後台 **Web Analytics** 新增 `arielglow.com` 後，把 **site token** 存成 Secret：`CF_WEB_ANALYTICS_TOKEN`，再重新部署

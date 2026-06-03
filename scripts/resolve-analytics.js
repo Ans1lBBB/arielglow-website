@@ -63,11 +63,15 @@ async function resolveToken() {
     return null;
   }
 
-  const list = await cfFetch(
-    `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/site_info/list`
-  );
-  const sites = list.result || [];
-  let token = pickTokenFromSites(sites);
+  let token = null;
+  try {
+    const list = await cfFetch(
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/rum/site_info/list`
+    );
+    token = pickTokenFromSites(list.result || []);
+  } catch (err) {
+    console.warn("RUM list skipped:", err.message);
+  }
 
   if (!token) {
     const zoneId = await getZoneId(accountId);
