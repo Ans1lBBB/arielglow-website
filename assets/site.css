@@ -309,6 +309,13 @@ section {
   font-size: 1rem;
 }
 
+.product-order-hint {
+  font-size: 0.75rem;
+  color: #8E8E93;
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
+}
+
 .btn-order {
   background: transparent;
   border: 1px solid #6F4E37;
@@ -324,6 +331,7 @@ section {
   align-items: center;
   gap: 6px;
   backdrop-filter: blur(2px);
+  text-decoration: none;
 }
 
 .btn-order:hover {
