@@ -2,16 +2,19 @@
 /**
  * Notify Bing/Yandex (IndexNow) after deploy so name-search pages get recrawled sooner.
  */
-const SITE = "https://www.arielglow.com/";
+const URLS = [
+  "https://www.arielglow.com/",
+  "https://www.arielglow.com/en/",
+];
 const KEY = "a1b2c3d4e5f6789012345678abcdef01";
-const KEY_LOCATION = `${SITE}${KEY}.txt`;
+const KEY_LOCATION = `https://www.arielglow.com/${KEY}.txt`;
 
 async function notifyIndexNow() {
   const body = {
     host: "www.arielglow.com",
     key: KEY,
     keyLocation: KEY_LOCATION,
-    urlList: [SITE],
+    urlList: URLS,
   };
 
   const res = await fetch("https://api.indexnow.org/indexnow", {

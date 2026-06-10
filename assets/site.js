@@ -2,96 +2,110 @@ const PRODUCT_PRICE = "NT$ 270";
 const MYSHIP_STORE =
   "https://myship.7-11.com.tw/general/detail/GM2606030400230";
 
+const UI = {
+  "zh-TW": {
+    orderHint: (spec) => `在賣場選這個規格就好：${spec}`,
+    buyBtn: "🛒 到 7-11 帶它回家",
+  },
+  en: {
+    orderHint: (spec) => `Pick this spec in the shop: ${spec}`,
+    buyBtn: "🛒 Get it via 7-11",
+  },
+};
+
 const products = [
   {
-    name: "可達鴨（無孔）",
+    name: { "zh-TW": "可達鴨（無孔）", en: "Psyduck (no hole)" },
     size: "10.5×9.5 cm",
     img: "/images/products/07-psyduck-a.jpg",
     myshipSpec: "可達鴨(無孔) 10.5×9.5 cm",
   },
   {
-    name: "草莓冰棒",
+    name: { "zh-TW": "草莓冰棒", en: "Strawberry Popsicle" },
     size: "5.5×4 cm",
     img: "/images/products/12-popsicle.jpg",
     myshipSpec: "草莓冰棒 5.5×4 cm",
   },
   {
-    name: "卡波",
+    name: { "zh-TW": "卡波", en: "Capybara" },
     size: "10.5×8 cm",
     img: "/images/products/08-mang.jpg",
     myshipSpec: "卡波 10.5×8 cm",
   },
   {
-    name: "外星豬",
+    name: { "zh-TW": "外星豬", en: "Alien Pig" },
     size: "8×10 cm",
     img: "/images/products/05-capoo.jpg",
     myshipSpec: "外星豬 8×10 cm",
   },
   {
-    name: "漢堡堡",
+    name: { "zh-TW": "漢堡堡", en: "Burger Buddy" },
     size: "8×8.5 cm",
     img: "/images/products/09-burger.jpg",
     myshipSpec: "漢堡堡 8×8.5 cm",
   },
   {
-    name: "貓貓咖啡杯",
+    name: { "zh-TW": "貓貓咖啡杯", en: "Cat Coffee Cup" },
     size: "8.5×10.5 cm",
     img: "/images/products/06-cat-cup.jpg",
     myshipSpec: "貓貓咖啡杯 8.5×10.5 cm",
   },
   {
-    name: "可達鴨（有孔）",
+    name: { "zh-TW": "可達鴨（有孔）", en: "Psyduck (with hole)" },
     size: "10.5×9.5 cm",
     img: "/images/products/10-psyduck-b.jpg",
     myshipSpec: "可達鴨(有孔) 10.5×9.5 cm",
   },
   {
-    name: "火星人",
+    name: { "zh-TW": "火星人", en: "Little Martian" },
     size: "11.5×10 cm",
     img: "/images/products/11-stripe.jpg",
     myshipSpec: "火星人 11.5×10 cm",
   },
   {
-    name: "布丁狗",
+    name: { "zh-TW": "布丁狗", en: "Pompompurin" },
     size: "10.5×11 cm",
     img: "/images/products/02-pompompurin.jpg",
     myshipSpec: "布丁狗 10.5×11 cm",
   },
   {
-    name: "鋼琴",
+    name: { "zh-TW": "鋼琴", en: "Piano" },
     size: "2.5×5.5 cm",
     img: "/images/products/04-piano.jpg",
     myshipSpec: "鋼琴 2.5×5.5 cm",
   },
   {
-    name: "被氣球帶走的企鵝",
+    name: { "zh-TW": "被氣球帶走的企鵝", en: "Penguin with Balloons" },
     size: "10.5×9 cm",
     img: "/images/products/03-penguin.jpg",
     myshipSpec: "被氣球帶走的企鵝 10.5×9 cm",
   },
   {
-    name: "豆豆種子",
+    name: { "zh-TW": "豆豆種子", en: "Totoro Seed" },
     size: "13×9.5 cm",
     img: "/images/products/01-totoro.jpg",
     myshipSpec: "豆豆種子 13×9.5 cm",
   },
 ];
 
+const pageLang = document.documentElement.lang?.startsWith("en") ? "en" : "zh-TW";
+const strings = UI[pageLang];
 const container = document.getElementById("pixelGrid");
 
 function renderProducts() {
   if (!container) return;
   container.innerHTML = "";
   products.forEach((item) => {
+    const displayName = item.name[pageLang] || item.name["zh-TW"];
     const card = document.createElement("div");
     card.className = "product-card fade-up";
     card.innerHTML = `
-      <img class="product-img" src="${item.img}" alt="${item.name}" loading="lazy">
-      <div class="product-name">${item.name}</div>
+      <img class="product-img" src="${item.img}" alt="${displayName}" loading="lazy">
+      <div class="product-name">${displayName}</div>
       <div class="product-size">${item.size}</div>
       <div class="product-price">${PRODUCT_PRICE}</div>
-      <p class="product-order-hint">在賣場選這個規格就好：${item.myshipSpec}</p>
-      <a class="btn-order" href="${MYSHIP_STORE}" target="_blank" rel="noopener noreferrer">🛒 到 7-11 帶它回家</a>
+      <p class="product-order-hint">${strings.orderHint(item.myshipSpec)}</p>
+      <a class="btn-order" href="${MYSHIP_STORE}" target="_blank" rel="noopener noreferrer">${strings.buyBtn}</a>
     `;
     container.appendChild(card);
   });

@@ -54,9 +54,40 @@ body {
   margin-left: 0.35rem;
 }
 
+.nav-right {
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
 .nav-links {
   display: flex;
   gap: 2.4rem;
+}
+
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.lang-switch a {
+  color: #8E8E93;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.lang-switch a:hover,
+.lang-switch a.is-active {
+  color: #1D1D1F;
+}
+
+.lang-sep {
+  color: #C7C7CC;
+  user-select: none;
 }
 
 .nav-links a {
@@ -488,6 +519,10 @@ footer {
 
   .navbar {
     padding: 1rem 1.2rem;
+  }
+
+  .nav-right {
+    gap: 1rem;
   }
 
   .nav-links {
