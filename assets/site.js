@@ -8,8 +8,8 @@ const UI = {
     buyBtn: "🛒 到 7-11 帶它回家",
   },
   en: {
-    orderHint: (spec) => `Pick this spec in the shop: ${spec}`,
-    buyBtn: "🛒 Get it via 7-11",
+    orderHint: (spec) => `In the shop, just pick this one: ${spec}`,
+    buyBtn: "🛒 Take it home via 7-11",
   },
 };
 
