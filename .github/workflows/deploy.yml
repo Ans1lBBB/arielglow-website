@@ -31,3 +31,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy . --project-name=arielglow-website --branch=main --commit-dirty=true
+
+      - name: Notify search engines (IndexNow)
+        run: node scripts/notify-search.js

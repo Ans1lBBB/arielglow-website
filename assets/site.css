@@ -95,12 +95,30 @@ section {
 }
 
 .hero-copy h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 600;
-  line-height: 1.08;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   color: #1D1D1F;
+  margin-bottom: 0.75rem;
+}
+
+.hero-name-zh {
+  font-family: 'Noto Sans TC', 'Inter', -apple-system, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  letter-spacing: 0.06em;
+}
+
+.hero-name-en {
+  font-family: 'Playfair Display', serif;
+}
+
+.hero-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #6F4E37;
   margin-bottom: 1rem;
 }
 
