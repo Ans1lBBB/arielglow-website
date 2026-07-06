@@ -2,6 +2,7 @@
   "name": "arielglow-website",
   "private": true,
   "scripts": {
-    "build": "node scripts/resolve-analytics.js && node scripts/inject-analytics.js"
+    "build": "node scripts/resolve-analytics.js && node scripts/inject-analytics.js",
+    "harden": "bash scripts/harden-security.sh"
   }
 }

@@ -15,8 +15,21 @@ ZONE_NAME = "arielglow.com"
 PAGES_TARGET = "arielglow-website.pages.dev"
 PAGES_PROJECT = "arielglow-website"
 CUSTOM_DOMAINS = ("www.arielglow.com", "arielglow.com")
-DMARC = "v=DMARC1; p=none; rua=mailto:hi@arielglow.com"
+DMARC = (
+    "v=DMARC1; p=none; adkim=r; aspf=r; pct=100; fo=1; rua=mailto:hi@arielglow.com"
+)
 REDIRECT_DESC = "Redirect apex to www"
+BOT_CONFIG = {
+    "fight_mode": True,
+    "ai_bots_protection": "block",
+    "crawler_protection": "enabled",
+    "enable_js": True,
+    "cf_robots_variant": "policy_only",
+    "content_bots_protection": "disabled",
+}
+TURNSTILE_NAME = "arielglow-static-site"
+TURNSTILE_DOMAINS = ("arielglow.com", "www.arielglow.com")
+SECURITY_TXT_URL = "https://www.arielglow.com/.well-known/security.txt"
 
 
 def norm_host(value: str) -> str:
@@ -28,7 +41,11 @@ def is_auth_error(res: dict) -> bool:
 
 
 def main() -> int:
-    token = os.environ.get("CF_TOKEN") or os.environ.get("CLOUDFLARE_API_TOKEN")
+    token = (
+        os.environ.get("CLOUDFLARE_HARDENING_TOKEN")
+        or os.environ.get("CF_TOKEN")
+        or os.environ.get("CLOUDFLARE_API_TOKEN")
+    )
     account = os.environ.get("CF_ACCOUNT") or os.environ.get("CLOUDFLARE_ACCOUNT_ID")
     if not token or not account:
         print("Missing CF_TOKEN / CLOUDFLARE_API_TOKEN or account id", file=sys.stderr)
@@ -58,10 +75,25 @@ def main() -> int:
         if not ok:
             dns_ok = False
 
-    ok, msg = ensure_txt(api, zone_id, existing, "_dmarc", DMARC)
+    ok, msg = ensure_dmarc_txt(api, zone_id, existing)
     print(msg)
     if not ok:
-        warnings.append("DMARC not applied (add _dmarc TXT manually or grant DNS Edit)")
+        warnings.append("DMARC TXT not applied (grant DNS Edit or fix _dmarc manually)")
+
+    ok, msg = ensure_dmarc_management(api, zone_id)
+    print(msg)
+    if not ok:
+        warnings.append(msg)
+
+    ok, msg = ensure_bot_management(api, zone_id)
+    print(msg)
+    if not ok:
+        warnings.append(msg)
+
+    ok, msg = ensure_turnstile(api, account)
+    print(msg)
+    if not ok:
+        warnings.append(msg)
 
     for setting, value in (
         ("always_use_https", "on"),
@@ -137,6 +169,10 @@ def main() -> int:
 
     live_ok = verify_live_site()
     print(f"\nLive site check: {'OK' if live_ok else 'FAILED'}")
+    sec_ok = verify_security_txt()
+    print(f"security.txt check: {'OK' if sec_ok else 'FAILED'}")
+    if not sec_ok:
+        warnings.append("security.txt missing or invalid after deploy")
 
     if warnings:
         print("\nWarnings:", file=sys.stderr)
@@ -271,6 +307,115 @@ def ensure_cname(
     if is_auth_error(res):
         return False, f"DNS CNAME cannot create {target} (token lacks DNS Edit)"
     return False, f"DNS CNAME {target}: {res.get('errors')}"
+
+
+def verify_security_txt() -> bool:
+    try:
+        req = urllib.request.Request(SECURITY_TXT_URL, method="GET")
+        req.add_header("User-Agent", "arielglow-hardening/1.0")
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            body = resp.read(2000).decode("utf-8", errors="replace")
+        if "Contact:" in body and "hi@arielglow.com" in body:
+            print(f"  OK {SECURITY_TXT_URL}")
+            return True
+        print(f"  FAIL {SECURITY_TXT_URL}: unexpected content")
+        return False
+    except Exception as exc:
+        print(f"  FAIL {SECURITY_TXT_URL}: {exc}")
+        return False
+
+
+def ensure_bot_management(api: CloudflareApi, zone_id: str) -> tuple[bool, str]:
+    desired = BOT_CONFIG
+    current = api.get(f"/zones/{zone_id}/bot_management")
+    if current.get("success"):
+        result = current.get("result") or {}
+        if (
+            result.get("fight_mode") is True
+            and result.get("ai_bots_protection") == "block"
+            and result.get("crawler_protection") == "enabled"
+        ):
+            return True, "Bot management OK (Bot Fight, block AI bots, AI Labyrinth)"
+    res = api.put(f"/zones/{zone_id}/bot_management", desired)
+    if res.get("success"):
+        return True, "Bot management applied (Bot Fight, block AI bots, AI Labyrinth)"
+    if is_auth_error(res):
+        return False, "Bot management: token lacks Bot Management Edit"
+    return False, f"Bot management: {res.get('errors')}"
+
+
+def ensure_dmarc_management(api: CloudflareApi, zone_id: str) -> tuple[bool, str]:
+    res = api.patch(
+        f"/zones/{zone_id}/email/security/dmarc-reports",
+        {"enabled": True},
+    )
+    if res.get("success"):
+        return True, "DMARC Management enabled"
+    if is_auth_error(res):
+        return False, "DMARC Management: token lacks Email Security Edit"
+    return False, f"DMARC Management: {res.get('errors')}"
+
+
+def ensure_turnstile(api: CloudflareApi, account: str) -> tuple[bool, str]:
+    listed = api.get(f"/accounts/{account}/challenges/widgets")
+    if listed.get("success"):
+        for widget in listed.get("result") or []:
+            if widget.get("name") == TURNSTILE_NAME:
+                return True, f"Turnstile widget OK: {TURNSTILE_NAME}"
+    res = api.post(
+        f"/accounts/{account}/challenges/widgets",
+        {
+            "name": TURNSTILE_NAME,
+            "domains": list(TURNSTILE_DOMAINS),
+            "mode": "managed",
+        },
+    )
+    if res.get("success"):
+        return True, f"Turnstile widget created: {TURNSTILE_NAME}"
+    if is_auth_error(res):
+        return False, "Turnstile: token lacks Account Turnstile Edit"
+    return False, f"Turnstile: {res.get('errors')}"
+
+
+def ensure_dmarc_txt(
+    api: CloudflareApi, zone_id: str, existing: list[dict]
+) -> tuple[bool, str]:
+    target = fqdn("_dmarc")
+    dmarc_records = [
+        rec for rec in existing if rec.get("name") == target and rec.get("type") == "TXT"
+    ]
+    if len(dmarc_records) == 1:
+        txt = dmarc_records[0]["content"].strip('"')
+        if txt == DMARC:
+            return True, f"DNS TXT OK: {target}"
+        res = api.patch(
+            f"/zones/{zone_id}/dns_records/{dmarc_records[0]['id']}",
+            {"type": "TXT", "name": "_dmarc", "content": DMARC, "ttl": 1},
+        )
+        if res.get("success"):
+            return True, f"DNS TXT updated: {target} (DMARC)"
+        if is_auth_error(res):
+            return False, f"DNS TXT cannot update {target} (token lacks DNS Edit)"
+        return False, f"DNS TXT update {target}: {res.get('errors')}"
+
+    if len(dmarc_records) > 1:
+        kept = False
+        for rec in dmarc_records:
+            txt = rec["content"].strip('"')
+            if not kept and txt.startswith("v=DMARC1"):
+                res = api.patch(
+                    f"/zones/{zone_id}/dns_records/{rec['id']}",
+                    {"type": "TXT", "name": "_dmarc", "content": DMARC, "ttl": 1},
+                )
+                if res.get("success"):
+                    kept = True
+                    continue
+            api.delete(f"/zones/{zone_id}/dns_records/{rec['id']}")
+        if kept:
+            return True, f"DNS TXT deduped and updated: {target} (DMARC)"
+        return False, f"DNS TXT duplicate _dmarc records (token lacks DNS Edit)"
+
+    return ensure_txt(api, zone_id, existing, "_dmarc", DMARC)
 
 
 def ensure_txt(

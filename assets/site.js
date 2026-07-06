@@ -1,6 +1,9 @@
-const PRODUCT_PRICE = "NT$ 270";
 const MYSHIP_STORE =
   "https://myship.7-11.com.tw/general/detail/GM2606030400230";
+
+function formatPrice(amount) {
+  return `NT$ ${amount}`;
+}
 
 const UI = {
   "zh-TW": {
@@ -17,74 +20,86 @@ const products = [
   {
     name: { "zh-TW": "可達鴨（無孔）", en: "Psyduck (no hole)" },
     size: "10.5×9.5 cm",
-    img: "/images/products/07-psyduck-a.jpg",
+    img: "/images/products/10-psyduck-b.jpg",
     myshipSpec: "可達鴨(無孔) 10.5×9.5 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "草莓冰棒", en: "Strawberry Popsicle" },
     size: "5.5×4 cm",
     img: "/images/products/12-popsicle.jpg",
     myshipSpec: "草莓冰棒 5.5×4 cm",
+    price: 170,
   },
   {
     name: { "zh-TW": "卡波", en: "Capybara" },
     size: "10.5×8 cm",
     img: "/images/products/08-mang.jpg",
     myshipSpec: "卡波 10.5×8 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "外星豬", en: "Alien Pig" },
     size: "8×10 cm",
     img: "/images/products/05-capoo.jpg",
     myshipSpec: "外星豬 8×10 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "漢堡堡", en: "Burger Buddy" },
     size: "8×8.5 cm",
     img: "/images/products/09-burger.jpg",
     myshipSpec: "漢堡堡 8×8.5 cm",
+    price: 200,
   },
   {
     name: { "zh-TW": "貓貓咖啡杯", en: "Cat Coffee Cup" },
     size: "8.5×10.5 cm",
     img: "/images/products/06-cat-cup.jpg",
     myshipSpec: "貓貓咖啡杯 8.5×10.5 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "可達鴨（有孔）", en: "Psyduck (with hole)" },
     size: "10.5×9.5 cm",
-    img: "/images/products/10-psyduck-b.jpg",
+    img: "/images/products/07-psyduck-a.jpg",
     myshipSpec: "可達鴨(有孔) 10.5×9.5 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "火星人", en: "Little Martian" },
     size: "11.5×10 cm",
     img: "/images/products/11-stripe.jpg",
     myshipSpec: "火星人 11.5×10 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "布丁狗", en: "Pompompurin" },
     size: "10.5×11 cm",
     img: "/images/products/02-pompompurin.jpg",
     myshipSpec: "布丁狗 10.5×11 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "鋼琴", en: "Piano" },
     size: "2.5×5.5 cm",
     img: "/images/products/04-piano.jpg",
     myshipSpec: "鋼琴 2.5×5.5 cm",
+    price: 170,
   },
   {
     name: { "zh-TW": "被氣球帶走的企鵝", en: "Penguin with Balloons" },
     size: "10.5×9 cm",
     img: "/images/products/03-penguin.jpg",
     myshipSpec: "被氣球帶走的企鵝 10.5×9 cm",
+    price: 220,
   },
   {
     name: { "zh-TW": "豆豆種子", en: "Totoro Seed" },
     size: "13×9.5 cm",
     img: "/images/products/01-totoro.jpg",
     myshipSpec: "豆豆種子 13×9.5 cm",
+    price: 220,
   },
 ];
 
@@ -103,7 +118,7 @@ function renderProducts() {
       <img class="product-img" src="${item.img}" alt="${displayName}" loading="lazy">
       <div class="product-name">${displayName}</div>
       <div class="product-size">${item.size}</div>
-      <div class="product-price">${PRODUCT_PRICE}</div>
+      <div class="product-price">${formatPrice(item.price)}</div>
       <p class="product-order-hint">${strings.orderHint(item.myshipSpec)}</p>
       <a class="btn-order" href="${MYSHIP_STORE}" target="_blank" rel="noopener noreferrer">${strings.buyBtn}</a>
     `;

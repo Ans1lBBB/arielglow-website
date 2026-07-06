@@ -1,3 +1,6 @@
 .DS_Store
 *.log
 .cf-analytics-token
+.env
+.env.*
+!.env.example
