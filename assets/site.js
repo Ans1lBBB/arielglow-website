@@ -33,16 +33,16 @@ const products = [
   },
   {
     name: { "zh-TW": "外星豬", en: "Alien Pig" },
-    size: "10.5×8 cm",
+    size: "8×10 cm",
     img: "/images/products/08-mang.jpg",
-    myshipSpec: "外星豬 10.5×8 cm",
+    myshipSpec: "外星豬 8×10 cm",
     price: 220,
   },
   {
     name: { "zh-TW": "卡波", en: "Capybara" },
-    size: "8×10 cm",
+    size: "10.5×8 cm",
     img: "/images/products/05-capoo.jpg",
-    myshipSpec: "卡波 8×10 cm",
+    myshipSpec: "卡波 10.5×8 cm",
     price: 220,
   },
   {
